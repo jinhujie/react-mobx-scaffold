@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'antd';
 import { observer, inject } from 'mobx-react';
 
 import './RouteTest.less';
@@ -13,8 +14,9 @@ class TestView extends React.Component{
   }
   render() {
     return <span className='index-test'>
-      <a>pp</a>
-      { this.props.store.test.name }
+      <Button>
+        { this.props.store.test.name }
+      </Button>
     </span>
   }
 }

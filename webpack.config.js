@@ -8,7 +8,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const myPlugin = require('./plugin.js');
-const extractTextPlugin = new ExtractTextPlugin('[name].css');
+const extractTextPlugin = new ExtractTextPlugin('[name]-one.css');
 
 const argvModeIndex = process.argv.findIndex(v => v === '--mode');
 const mode = argvModeIndex !== '-1' ? process.argv[argvModeIndex + 1] : undefined;
@@ -49,12 +49,21 @@ const config = {
         }]
       },
       {
-        test: /\.less$/i, exclude: /node_modules/,
-        use: extractTextPlugin.extract([
-          { loader: 'css-loader', options: { minimize: !isDevMode } },
-          'postcss-loader',
-          { loader: 'less-loader', options: {sourceMap: true} }]
-        )
+        test: /\.less$/i,
+        use: isDevMode ? (
+          [ "style-loader",
+            {loader: 'css-loader', options: {sourceMap: 1}},
+            "postcss-loader", { loader: 'less-loader', options: { javascriptEnabled: true} }
+          ]
+          ) : (
+            extractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: [
+              { loader: 'css-loader', options: { minimize: true } },
+              'postcss-loader',
+              { loader: 'less-loader', options: { javascriptEnabled: true} }
+            ],
+          }))
       },
       {
         test: /\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2|svg|svgz)$/i,
@@ -68,19 +77,19 @@ const config = {
     ]
   },
   plugins: 
-    (isDevMode ? [] : [new CleanWebpackPlugin([path.resolve(__dirname, './dist')]), new BundleAnalyzerPlugin() ])
+    (isDevMode ? [] : [new CleanWebpackPlugin([path.resolve(__dirname, './dist')]), /*new BundleAnalyzerPlugin()*/ ])
     .concat([
     ... pages.map(name => ( new HtmlWebpackPlugin(
       { filename: changeFirststr2Lowercase(name) + '.html',
         template: path.resolve(__dirname, './src/public/index.html'),
-        chunks: [changeFirststr2Lowercase(name),'common', 'common-one.css', 'common.css', '[name].css']})
+        chunks: [changeFirststr2Lowercase(name),'common-one', '[name].css', 'common.css']})
     )),
     new myPlugin(),
     new webpack.DefinePlugin({
       __DEV: JSON.stringify(isDevMode),
     }),
     new MiniCssExtractPlugin({
-      filename: "[name]-one.css",
+      filename: "[name].css",
       chunkFilename: "[id].css"
     }),
     extractTextPlugin,
@@ -93,7 +102,7 @@ const config = {
       chunks (chunk) {
         return chunk.name !== 'common';
       },
-      name: true
+      name: true,
     }  
   },
   externals: {
@@ -105,16 +114,12 @@ const config = {
   },
   resolve: {
     alias: {
+      src: path.resolve(__dirname, 'src'),
+      assets: path.resolve(__dirname, 'src/assets'),
       components: path.resolve(__dirname, 'src/components'),
       store: path.resolve(__dirname, 'src/store'),
       util: path.resolve(__dirname, 'src/util'),
-      src: path.resolve(__dirname, 'src'),
-      assets: path.resolve(__dirname, 'src/assets'),
     }
-  },
-  node: {
-		process: false,
-		Buffer: false
   },
 };
 
