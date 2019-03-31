@@ -8,7 +8,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const myPlugin = require('./plugin.js');
-const extractTextPlugin = new ExtractTextPlugin('[name]-one.css');
+const extractTextPlugin = new ExtractTextPlugin('css/[name]-one.css');
 
 const argvModeIndex = process.argv.findIndex(v => v === '--mode');
 const mode = argvModeIndex !== '-1' ? process.argv[argvModeIndex + 1] : undefined;
@@ -27,10 +27,10 @@ pages.forEach(name => entries[
 const context = path.resolve(__dirname, 'src');
 const config = {
   context,
-  entry: { common: './public/index.js', ... entries },
+  entry: { ... entries, common: './public/index.js' },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: "[name].js",
+    filename: isDevMode ? "[name].js" : "js/[name].js",
     publicPath: '/',
   },
   module: {
@@ -71,25 +71,27 @@ const config = {
           loader: 'url-loader',
           options: {
             limit: 8192,
+            fallback: isDevMode ? 'file-loader' : 'file-loader?name=img/[name].[ext]'
           }
         }]
       }
     ]
   },
   plugins: 
-    (isDevMode ? [] : [new CleanWebpackPlugin([path.resolve(__dirname, './dist')]), /*new BundleAnalyzerPlugin()*/ ])
+    (isDevMode ? [] : [/*new CleanWebpackPlugin([path.resolve(__dirname, './dist')]),*/ /*new BundleAnalyzerPlugin()*/ ])
     .concat([
     ... pages.map(name => ( new HtmlWebpackPlugin(
-      { filename: changeFirststr2Lowercase(name) + '.html',
+      { filename: (isDevMode ? '' : 'page/') + changeFirststr2Lowercase(name) + '.html',
         template: path.resolve(__dirname, './src/public/index.html'),
-        chunks: [changeFirststr2Lowercase(name),'common-one', '[name].css', 'common.css']})
+        chunksSortMode: 'manual',
+        chunks: ['[name]-one.css', '[name].css', changeFirststr2Lowercase(name), 'common']})
     )),
     new myPlugin(),
     new webpack.DefinePlugin({
       __DEV: JSON.stringify(isDevMode),
     }),
     new MiniCssExtractPlugin({
-      filename: "[name].css",
+      filename: isDevMode ? "[name].css" : "css/[name].css",
       chunkFilename: "[id].css"
     }),
     extractTextPlugin,
@@ -119,6 +121,7 @@ const config = {
       components: path.resolve(__dirname, 'src/components'),
       store: path.resolve(__dirname, 'src/store'),
       util: path.resolve(__dirname, 'src/util'),
+      source: path.resolve(__dirname, 'src/source'),
     }
   },
 };
@@ -127,11 +130,7 @@ module.exports = (env, argv) => {
   if (argv.mode === 'development'){
     config.devtool = 'inline-source-map';
     config.devServer = {
-      contentBase: './public/dist/',
-      port: '9008',
-      // proxy: {
-      //   '/rpaserver/portal/rpa': 'http://172.20.14.106:8080/',
-      // },
+      port: '9009',
     };
   }
 

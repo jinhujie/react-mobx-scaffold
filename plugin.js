@@ -11,7 +11,10 @@ MyPlugin.prototype.apply = function (compiler) {
         var htmlName = options.filename.split('.html')[0];
         
         compilation.chunks.forEach(chunk => {
-          var shouldInsertChunk = chunk.name.indexOf(htmlName) !== -1 && htmlName !== chunk.name;
+          //TODO: HTML PUBLIC PATH NOT WORK
+          var htmlPublicPath = 'page/';
+          var htmlNameWhithoutPath = htmlName.replace(htmlPublicPath, '');
+          var shouldInsertChunk = chunk.name.indexOf(htmlNameWhithoutPath) !== -1 && htmlNameWhithoutPath !== chunk.name;
 
           function getHmltNode (file) {
             var fileType = file.match(/\.[^\.]+$/)
@@ -31,7 +34,9 @@ MyPlugin.prototype.apply = function (compiler) {
           if(shouldInsertChunk){
             for (var i = 0; i< chunk.files.length; i++){
               var file = chunk.files[i];
-              var htmlNode = getHmltNode(file);
+              //TODO: HTML PUBLIC PATH NOT WORK
+              console.log(file);
+              var htmlNode = getHmltNode('/' + file);
               if (htmlNode) {
                 var translateTarget = {
                   '.css': '</head>',
@@ -45,6 +50,16 @@ MyPlugin.prototype.apply = function (compiler) {
             }
           }
         });
+        var commonCssTag;
+        var cssLinkTags = data.html.match(/<link[^>]+>/g);
+        for(var j = 0; j < cssLinkTags.length; j++) {
+          var link = cssLinkTags[j];
+          if (/common\.css/.test(link)){
+            commonCssTag = link;
+          }
+        }
+        data.html = data.html.replace(commonCssTag, '');
+        data.html = data.html.replace('<body>', '<body>' + commonCssTag);
 
         cb(null, data)
       }
