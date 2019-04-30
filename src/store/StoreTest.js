@@ -1,10 +1,13 @@
 import { observable, action, computed } from 'mobx';
 
 class StoreTest{
-  @observable name = 'jays';
-
-  @action reName = () => {
-    this.name = 'newName';
+  @observable user = ['user-a', 'user-b'];
+  
+  @action addUser = name => {
+    this.user.push(name);
+  }
+  @action delLastUser = () => {
+    this.user.pop();
   }
 }
 

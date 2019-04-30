@@ -55,7 +55,16 @@ const config = {
       {
         test: /\.less$/i,
         exclude: /node_modules/,
-        use: extractTextPlugin.extract({
+        use: isDevMode ? (
+          ['style-loader', {
+            loader: 'css-loader',
+            options: { minimize: !isDevMode, sourceMap: isDevMode, modules: true, localIdentName: "[name]__[local]___[hash:base64:5]" }
+          }, 'postcss-loader', {
+            loader: 'less-loader',
+            options: { javascriptEnabled: true}
+          }]
+        ) :
+        extractTextPlugin.extract({
             fallback: 'style-loader',
             use: [{
               loader: 'css-loader',

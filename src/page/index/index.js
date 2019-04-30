@@ -24,12 +24,14 @@ class Root extends React.Component {
   }
 }
 
-(function renderRoot() {
+function renderRoot() {
   ReactDOM.render(
     <Root />,
     document.getElementById('root')
   );
-})()
+}
+
+renderRoot();
 
 if (module.hot) {
   module.hot.accept(function() {
