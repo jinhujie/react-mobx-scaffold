@@ -35,7 +35,6 @@ MyPlugin.prototype.apply = function (compiler) {
             for (var i = 0; i< chunk.files.length; i++){
               var file = chunk.files[i];
               //TODO: HTML PUBLIC PATH NOT WORK
-              console.log(file);
               var htmlNode = getHmltNode('/' + file);
               if (htmlNode) {
                 var translateTarget = {

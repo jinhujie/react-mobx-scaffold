@@ -48,22 +48,25 @@ const config = {
           loader: 'css-loader', options: { minimize: !isDevMode }
         }]
       },
+      { test: /\.less$/i,
+        include: /node_modules/,
+        use: ['style-loader', 'css-loader', 'less-loader?javascriptEnabled=true'],
+      },
       {
         test: /\.less$/i,
-        use: isDevMode ? (
-          [ "style-loader",
-            {loader: 'css-loader', options: {sourceMap: 1}},
-            "postcss-loader", { loader: 'less-loader', options: { javascriptEnabled: true} }
-          ]
-          ) : (
-            extractTextPlugin.extract({
+        exclude: /node_modules/,
+        use: extractTextPlugin.extract({
             fallback: 'style-loader',
-            use: [
-              { loader: 'css-loader', options: { minimize: true } },
-              'postcss-loader',
-              { loader: 'less-loader', options: { javascriptEnabled: true} }
-            ],
-          }))
+            use: [{
+              loader: 'css-loader',
+              options: { minimize: !isDevMode, sourceMap: isDevMode, modules: true, localIdentName: "[name]__[local]___[hash:base64:5]" }
+            },{
+              loader: 'postcss-loader',
+            },{
+              loader: 'less-loader',
+              options: { javascriptEnabled: true}
+            }],
+        })
       },
       {
         test: /\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2|svg|svgz)$/i,
@@ -78,7 +81,9 @@ const config = {
     ]
   },
   plugins: 
-    (isDevMode ? [] : [/*new CleanWebpackPlugin([path.resolve(__dirname, './dist')]),*/ /*new BundleAnalyzerPlugin()*/ ])
+    (isDevMode ? [
+      new webpack.HotModuleReplacementPlugin(),
+    ] : [/*new CleanWebpackPlugin([path.resolve(__dirname, './dist')]),*/ new BundleAnalyzerPlugin() ])
     .concat([
     ... pages.map(name => ( new HtmlWebpackPlugin(
       { filename: (isDevMode ? '' : 'page/') + changeFirststr2Lowercase(name) + '.html',
@@ -131,6 +136,14 @@ module.exports = (env, argv) => {
     config.devtool = 'inline-source-map';
     config.devServer = {
       port: '9009',
+      hot: true,
+      // proxy:[{
+      //   context: ['/gateway', ],
+      //   target: 'https://mock.yonyoucloud.com/mock/870',
+      //   changeOrigin: true,
+      //   secure: false,
+      //   logLevel: 'debug',
+      // }]
     };
   }
 
