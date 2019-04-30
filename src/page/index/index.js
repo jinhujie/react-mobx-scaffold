@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'mobx-react';
 // import DevTools, { configureDevtool } from 'mobx-react-devtools'
 
-import TestView from './RouteTest';
+import RouteTest from './Test/RouteTest';
 import { StoreTest } from 'store';
 
 // configureDevtool({
@@ -16,7 +16,7 @@ class Root extends React.Component {
     return (
         <Provider store={{test: StoreTest}}>
           <React.Fragment>
-            <TestView />
+            <RouteTest />
             {/* <DevTools noPanel/> */}
           </React.Fragment>
         </Provider>
@@ -24,16 +24,15 @@ class Root extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <Root />,
-  document.getElementById('root')
-);
+(function renderRoot() {
+  ReactDOM.render(
+    <Root />,
+    document.getElementById('root')
+  );
+})()
 
 if (module.hot) {
-  module.hot.accept('./RouteTest.js', function() {
-    ReactDOM.render(
-      <Root />,
-      document.getElementById('root')
-    );
+  module.hot.accept(function() {
+    renderRoot();
   })
 }

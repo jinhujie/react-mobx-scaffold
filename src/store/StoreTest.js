@@ -1,7 +1,7 @@
 import { observable, action, computed } from 'mobx';
 
 class StoreTest{
-  @observable name = 'jay';
+  @observable name = 'jays';
 
   @action reName = () => {
     this.name = 'newName';
