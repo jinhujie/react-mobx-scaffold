@@ -8,6 +8,7 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const myPlugin = require('./plugin.js');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const extractTextPlugin = new ExtractTextPlugin('css/[name]-one.css');
 
 const argvModeIndex = process.argv.findIndex(v => v === '--mode');
@@ -94,6 +95,9 @@ const config = {
       new webpack.HotModuleReplacementPlugin(),
     ] : [/*new CleanWebpackPlugin([path.resolve(__dirname, './dist')]),*/ new BundleAnalyzerPlugin() ])
     .concat([
+      new CopyWebpackPlugin([
+        { from: 'assets', to: 'static' }
+      ]),
     ... pages.map(name => ( new HtmlWebpackPlugin(
       { filename: (isDevMode ? '' : 'page/') + changeFirststr2Lowercase(name) + '.html',
         template: path.resolve(__dirname, './src/public/index.html'),
@@ -123,9 +127,9 @@ const config = {
   },
   externals: {
     ...(isDevMode ? {} : {
-      "react": "React",
-      "react-dom": "ReactDOM",
-      "react-router-dom": "ReactRouterDOM",
+      // "react": "React",
+      // "react-dom": "ReactDOM",
+      // "react-router-dom": "ReactRouterDOM",
     })
   },
   resolve: {
