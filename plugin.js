@@ -1,3 +1,10 @@
+const { is } = require('node_modules/immutable/dist/immutable-nonambient');
+console.log(NODE_OPTIONS)
+const { ABSOLUTE_PUBLIC_PATH } = require('./env');
+const mode = argvModeIndex !== '-1' ? process.argv[argvModeIndex + 1] : undefined;
+const isDevMode = mode === 'development';
+const publicPath = isDevMode ? '' : ABSOLUTE_PUBLIC_PATH;
+
 function MyPlugin(options) {
   // Configure your plugin with options...
 }
@@ -14,13 +21,14 @@ MyPlugin.prototype.apply = function (compiler) {
           //TODO: HTML PUBLIC PATH NOT WORK
           var htmlPublicPath = 'page/';
           var htmlNameWhithoutPath = htmlName.replace(htmlPublicPath, '');
-          var shouldInsertChunk = chunk.name.indexOf(htmlNameWhithoutPath) !== -1 && htmlNameWhithoutPath !== chunk.name;
+          var shouldInsertChunk = chunk.name.indexOf(htmlNameWhithoutPath)
+           !== -1 && htmlNameWhithoutPath !== chunk.name;
 
           function getHmltNode (file) {
             var fileType = file.match(/\.[^\.]+$/)
             var htmlNode = {
-              '.css': `<link href="${file}" rel="stylesheet">`,
-              '.js': `<script type="text/javascript" src="${file}"></script>`
+              '.css': `<link href="${publicPath}${file}" rel="stylesheet">`,
+              '.js': `<script type="text/javascript" src="${publicPath}${file}"></script>`
             };
             
             if (fileType) {
@@ -36,6 +44,8 @@ MyPlugin.prototype.apply = function (compiler) {
               var file = chunk.files[i];
               //TODO: HTML PUBLIC PATH NOT WORK
               var htmlNode = getHmltNode('/' + file);
+              // console.log("=====")
+              // console.log(file, htmlNode);
               if (htmlNode) {
                 var translateTarget = {
                   '.css': '</head>',

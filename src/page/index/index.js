@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'mobx-react';
 // import DevTools, { configureDevtool } from 'mobx-react-devtools'
 
+import Container from './container';
 import RouteTest from './Test/RouteTest';
-import { StoreTest } from 'store';
+import { storeQrmPc } from 'store';
 
 // configureDevtool({
 //   logEnabled: true,
@@ -15,9 +16,9 @@ import { StoreTest } from 'store';
 class Root extends React.Component {
   render() {
     return (
-        <Provider store={{test: StoreTest}}>
+        <Provider store={storeQrmPc}>
           <React.Fragment>
-            <RouteTest />
+            <Container />
             {/* <DevTools noPanel/> */}
           </React.Fragment>
         </Provider>

@@ -9,30 +9,34 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const myPlugin = require('./plugin.js');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const extractTextPlugin = new ExtractTextPlugin('css/[name]-one.css');
+const { ABSOLUTE_PUBLIC_PATH } = require('./env');
 
 const argvModeIndex = process.argv.findIndex(v => v === '--mode');
 const mode = argvModeIndex !== '-1' ? process.argv[argvModeIndex + 1] : undefined;
 const isDevMode = mode === 'development';
+const staticPublicPath = isDevMode 
+? { js: 'js', css: 'css' }
+: { js: `js`, css: `css`}
+const extractTextPlugin = new ExtractTextPlugin(`${staticPublicPath.css}/[name]-one.css`);
 
 //构建分页
 const pages = fs.readdirSync(path.resolve(__dirname, 'src/page/')).filter(
   name => /^[^.]+$/.test(name)
-);
-const entries = {};
-const changeFirststr2Lowercase = str => str.charAt(0).toLowerCase() + str.substring(1);
-pages.forEach(name => entries[
-  changeFirststr2Lowercase(name)
-] = './page/' + name + '/index.js');
-
+  );
+  const entries = {};
+  const changeFirststr2Lowercase = str => str.charAt(0).toLowerCase() + str.substring(1);
+  pages.forEach(name => entries[
+    changeFirststr2Lowercase(name)
+  ] = './page/' + name + '/index.js');
+  
 const context = path.resolve(__dirname, 'src');
 const config = {
   context,
   entry: { ... entries, common: './public/index.js' },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: isDevMode ? "[name].js" : "js/[name].js",
-    publicPath: '/',
+    filename: `${staticPublicPath.js}/[name].js`,
+    publicPath: isDevMode ? '' : ABSOLUTE_PUBLIC_PATH,
   },
   module: {
     rules: [
@@ -50,34 +54,37 @@ const config = {
         }]
       },
       { test: /\.less$/i,
-        include: /node_modules/,
+        // include: /node_modules/,
         use: ['style-loader', 'css-loader', 'less-loader?javascriptEnabled=true'],
       },
-      {
-        test: /\.less$/i,
-        exclude: /node_modules/,
-        use: isDevMode ? (
-          ['style-loader', {
-            loader: 'css-loader',
-            options: { minimize: !isDevMode, sourceMap: isDevMode, modules: true, localIdentName: "[name]__[local]___[hash:base64:5]" }
-          }, 'postcss-loader', {
-            loader: 'less-loader',
-            options: { javascriptEnabled: true}
-          }]
-        ) :
-        extractTextPlugin.extract({
-            fallback: 'style-loader',
-            use: [{
-              loader: 'css-loader',
-              options: { minimize: !isDevMode, sourceMap: isDevMode, modules: true, localIdentName: "[name]__[local]___[hash:base64:5]" }
-            },{
-              loader: 'postcss-loader',
-            },{
-              loader: 'less-loader',
-              options: { javascriptEnabled: true}
-            }],
-        })
-      },
+      // {
+      //   test: /\.less$/i,
+      //   exclude: /node_modules/,
+      //   use: 
+      //   // isDevMode ? 
+      //   (
+      //     ['style-loader', {
+      //       loader: 'css-loader',
+      //       options: { minimize: !isDevMode, sourceMap: isDevMode, modules: true, localIdentName: "[name]__[local]___[hash:base64:5]" }
+      //     }, 'postcss-loader', {
+      //       loader: 'less-loader',
+      //       options: { javascriptEnabled: true}
+      //     }]
+      //   ) 
+      //   // :
+      //   // extractTextPlugin.extract({
+      //   //     fallback: 'style-loader',
+      //   //     use: [{
+      //   //       loader: 'css-loader',
+      //   //       options: { minimize: !isDevMode, sourceMap: isDevMode, modules: true, localIdentName: "[name]__[local]___[hash:base64:5]" }
+      //   //     },{
+      //   //       loader: 'postcss-loader',
+      //   //     },{
+      //   //       loader: 'less-loader',
+      //   //       options: { javascriptEnabled: true}
+      //   //     }],
+      //   // })
+      // },
       {
         test: /\.(png|jpg|jpeg|gif|eot|ttf|woff|woff2|svg|svgz)$/i,
         use: [{
@@ -96,7 +103,7 @@ const config = {
     ] : [/*new CleanWebpackPlugin([path.resolve(__dirname, './dist')]),*/ new BundleAnalyzerPlugin() ])
     .concat([
       new CopyWebpackPlugin([
-        { from: 'assets', to: 'static' }
+        { from: 'assets', to: 'staticQRM' }
       ]),
     ... pages.map(name => ( new HtmlWebpackPlugin(
       { filename: (isDevMode ? '' : 'page/') + changeFirststr2Lowercase(name) + '.html',
@@ -109,7 +116,7 @@ const config = {
       __DEV: JSON.stringify(isDevMode),
     }),
     new MiniCssExtractPlugin({
-      filename: isDevMode ? "[name].css" : "css/[name].css",
+      filename: `${staticPublicPath.css}/[name].css`,
       chunkFilename: "[id].css"
     }),
     extractTextPlugin,
@@ -150,13 +157,15 @@ module.exports = (env, argv) => {
     config.devServer = {
       port: '9009',
       hot: true,
-      // proxy:[{
-      //   context: ['/gateway', ],
-      //   target: 'https://mock.yonyoucloud.com/mock/870',
-      //   changeOrigin: true,
-      //   secure: false,
-      //   logLevel: 'debug',
-      // }]
+      proxy:[{
+        context: ['/match'],
+        target: isDevMode
+          ? 'http://activity-test.tuwan.com'
+          : 'http://activity.tuwan.com',
+        changeOrigin: true,
+        secure: false,
+        logLevel: 'debug',
+      }]
     };
   }
 

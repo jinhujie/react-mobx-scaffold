@@ -11,8 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/polyfill": "^7.12.1",
     "antd": "^3.6.5",
     "axios": "^0.18.0",
+    "es6-shim": "^0.35.6",
     "mobx": "^4.4.0",
     "mobx-react": "^5.2.8"
   },
