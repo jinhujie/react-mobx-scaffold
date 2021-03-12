@@ -1,7 +1,7 @@
 function resolve(fileName) {
     const prefix = __DEV
         ? '/staticQRM/image/' : 
-        'https://asset.tuwan.com/activity/qqRaceComp/';
+        'https://asset.tuwan.com/activity/qq-race-comp/staticQRM/image';
     return prefix + fileName;
 }
 

@@ -1,9 +1,8 @@
-const { is } = require('node_modules/immutable/dist/immutable-nonambient');
-console.log(NODE_OPTIONS)
 const { ABSOLUTE_PUBLIC_PATH } = require('./env');
-const mode = argvModeIndex !== '-1' ? process.argv[argvModeIndex + 1] : undefined;
-const isDevMode = mode === 'development';
-const publicPath = isDevMode ? '' : ABSOLUTE_PUBLIC_PATH;
+// const mode = argvModeIndex !== '-1' ? process.argv[argvModeIndex + 1] : undefined;
+// const isDevMode = mode === 'development';
+// const publicPath = isDevMode ? '' : ABSOLUTE_PUBLIC_PATH;
+const publicPath = ABSOLUTE_PUBLIC_PATH;
 
 function MyPlugin(options) {
   // Configure your plugin with options...
