@@ -1,3 +1,8 @@
+.flex-center-center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .bgc{
     background-size: 100% auto;
     background-repeat: no-repeat;
@@ -7,3 +12,34 @@
     width: 200px;
     height: 100px;
 }
+.backgrounded{
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+}
+.tw-modal{
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.9);
+  top: 0;
+  left: 0;
+  z-index: 999;
+  .flex-center-center;
+  .tw-modal-content{
+    position: relative;
+    .close{
+      cursor: pointer;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+    }
+    background-size: 100% 100%;
+    border-radius: 10px;
+    color: white;
+    padding: 35px;
+  }
+  .tw-modal-body{
+    margin-top: 30px;
+  }
+}
+

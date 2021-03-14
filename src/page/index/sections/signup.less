@@ -1,0 +1,43 @@
+.signed-list{
+  display: flex;
+  flex-wrap: wrap;
+  padding: 13px;
+  height: 430px;
+  overflow-y: scroll;
+  background-size: cover;
+
+  .user-info{
+    width: 150px;
+    text-align: center;
+    font-size: 18px;
+    color: #fefeff;
+    margin: 0 20px;
+    margin-bottom: 37px;
+    .avatar{
+      width: 120px;
+      height: 120px;
+      border: 1px solid #fcea68;
+      border-radius: 100%;
+      overflow: hidden;
+      margin: 0 auto;
+      position: relative;
+      img{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+    }
+    h1{
+      margin-top: 13px;
+      margin-bottom: 10px;
+    }
+    h2{
+      font-size: 16px;
+      color: #98aace;
+      background-color: rgb(66, 76, 131);
+      border-radius: 16px;
+      line-height: 32px;
+    }
+  }
+}

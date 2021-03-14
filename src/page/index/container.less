@@ -1,13 +1,31 @@
 .display-hidden{
     display: none;
 }
-.centerBlock{
+.center-block{
     display: block;
     margin: 0 auto;
 }
+.pointer{
+    cursor: pointer;
+}
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    width: 6px;
+    background: #7580b8;
+    border-radius: 3px;
+}
+
+.main-bg{
+  min-width: 1200px;
+  background-size: 100% auto;
+}
 .main{
-    text-align: center;
-    width: 100%;
+  padding-top: 40%;
+  width: 1200px;
+  .center-block;
 }
 .login{
     font-size: 16px;
@@ -24,24 +42,15 @@
     background: transparent;
     border: none;
 }
-.signup-form-bg{
-    width: 100%;
-    max-width: 1200px;
-    background-size: cover;
-    margin: 0 auto;
-    background-repeat: no-repeat;
+.signup-form{
     margin-top: 32px;
     font-size: 16px;
-    flood-color: #454e80;
+    font-color: #454e80;
     padding-top: 41px;
-    .signup-form{
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        width: 100%;
-    }
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
     .form-item{
-        // display: inline-block;
         display: flex;
         justify-content: flex-start;
         position: relative;
@@ -57,13 +66,29 @@
             color: #98aace;
             margin-right: 15px;
         }
+        input{
+            width: 338px;
+            height: 54px;
+            font-size: 16px;
+            color: #454e80;
+            padding-left: 16px;
+        }
+        .dropdown-option{
+            width: 338px;
+            height: 54px;
+            font-size: 16px;
+            color: #454e80;
+            padding-left: 16px;
+        }
     }
-    input{
-        width: 338px;
-        height: 54px;
-        font-size: 16px;
-        color: #454e80;
-        padding-left: 16px;
+    .submit-container{
+      width: 100%;
+          margin-top: 13px;
+          margin-bottom: 40px;
+          text-align: center;
+      .submit{
+          cursor: pointer;
+      }
     }
     .join-qq-commonutiy{
         text-align: left;
@@ -89,37 +114,19 @@
         }
         
     }
-    .dropdown-option{
-        width: 338px;
-        height: 54px;
-        font-size: 16px;
-        color: #454e80;
-        padding-left: 16px;
-    }
-    .submit{
-        cursor: pointer;
-        margin-top: 13px;
-        margin-bottom: 40px;
-    }
 }
 .matchRuleExt{
-    max-width: 1200px;
-    height: 424px;
-    background-size: cover;
+    width: 100%;
     margin-top: 50px;
 }
-.rewardBg{
-    width: 1200px;
-    min-height: 200px;
-    margin-top: 52px;
-    padding-top: 35px;
-}
 .extralSummary{
+    width: 100%;
     margin-top: 30px;
 }
 .raw{
     margin-top: 50px;
-    margin-bottom: 30px;
+    padding-bottom: 30px;
+    text-align: center;
     color: #98aace;
     font-size: 14px;
     .split{
@@ -154,16 +161,33 @@
         background-color: #28326c;
     }
 }
-.pointer{
-    cursor: pointer;
+.modal-sigup-header{
+  text-align: center;
 }
-::-webkit-scrollbar {
-    width: 6px;
+.modal-signup-successed{
+  font-size: 20px;
+  color: #98aace;
+  width: 514px;
+  text-align: center;
+  li{
+    margin-bottom: 20px;
+    label{
+      margin-right: 10px;
+    }
+    span{
+      color: #ffffff;
+    }
+  }
+  li.last{
+    margin-top: 17px;
+  }
+  li.footer{
+    margin-bottom: 0;
+  }
+  li.submit{
+    img{
+      cursor: pointer;
+    }
+    margin-top: 47px;
+  }
 }
-
-::-webkit-scrollbar-thumb {
-    width: 6px;
-    background: #7580b8;
-    border-radius: 3px;
-}
-
