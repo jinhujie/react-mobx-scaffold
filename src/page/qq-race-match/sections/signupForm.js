@@ -8,22 +8,37 @@ import Images from "imageExporter/qq-race-match";
 @inject("store")
 @observer
 class SignupForm extends React.Component {
-  componentDidMount() {
-    this.props.store.fetchSignupInfo();
+  constructor(){
+    super();
   }
   onSubmit = () => {
     const { uid } = this.props.store.signupInfo;
     const isLogined = uid > 0;
+    if (__DEV) {
+      return this.props.store.signup().then(() => {
+        if (this.props.store.signupInfo.is_signup) {
+          this.props.open();
+        }
+      })
+
+    }
     if (isLogined) {
-      this.props.store.signup();
-      //TODO
-      //open modal while signup successed
+      this.props.store.signup().then(() => {
+        if (this.props.store.signupInfo.is_signup) {
+          this.props.open();
+        }
+      })
     } else {
       window.showLogin();
     }
   };
+  findTingUrl = () => {
+    const { default_cid, cid } = this.props.store.signupInfo;
+    return this.props.store.findListByCid(cid || default_cid)
+
+  }
   render() {
-    const { setSignupInfo } = this.props.store;
+    const { setSignupInfo, default_cid, cid, findListByCid } = this.props.store;
     const {
       game_name,
       requiredListTitle,
@@ -33,6 +48,7 @@ class SignupForm extends React.Component {
     return backgrounded(
       Images["signupFormBg.png"],
       <div className="signup-form">
+        <img src={Images["girl.png"]} className="girl"/>
         <div className="form-item">
           <label>游戏昵称</label>
           <BackgroundContainer bgSrc={Images["signupFormInput.png"]}>
@@ -78,13 +94,14 @@ class SignupForm extends React.Component {
             bgSrc={Images["joinQqCommuBtn.png"]}
             classExt="join-qq-btncon"
           >
-            <div className="join-btn">点击加入报名群</div>
+            <div className="diplay-hidden">{cid}</div>
+            <a className="join-btn" href={this.findTingUrl().qq_group_url} target={"black"}>点击加入报名群</a>
           </BackgroundContainer>
           <span className="pushbefore">用于赛前通知</span>
           {/* <div className='join-qq-commonutiy'/> */}
         </div>
 
-        <div className="form-item">
+        {/* <div className="form-item">
           <label>要求区服</label>
           <BackgroundContainer bgSrc={Images["signupFormInput.png"]}>
             <input
@@ -93,6 +110,11 @@ class SignupForm extends React.Component {
               disabled
             />
           </BackgroundContainer>
+        </div> */}
+
+        <div className="form-item">
+          <label>报名来源</label>
+          <SignupInfoSource />
         </div>
 
         <div className="submit-container">
@@ -147,16 +169,16 @@ class SignupInfoTing extends React.Component {
 
     return (
       <React.Fragment>
-        <span onClick={this.onSelectClick} className="pointer">
-          <BackgroundContainer bgSrc={Images["signupFormInput.png"]}>
+        <span onClick={this.onSelectClick} >
+          <BackgroundContainer bgSrc={Images["select.png"]}>
             <input
-              className="transpant-input"
+              className="transpant-input pointer"
               value={this.findListByCid(cid, listDropdownOptions).title}
               disabled
             ></input>
           </BackgroundContainer>
         </span>
-        <div className="ting-options">
+        <div className={`ting-options ${shown ? "" : "hide-option-border"}`}>
           {shown
             ? listDropdownOptions.map((option) => {
                 return (
@@ -166,6 +188,69 @@ class SignupInfoTing extends React.Component {
                     key={option.id}
                   >
                     {option.title}
+                  </div>
+                );
+              })
+            : null}
+        </div>
+      </React.Fragment>
+    );
+  }
+}
+
+@inject("store")
+@observer
+class SignupInfoSource extends React.Component {
+  state = { shown: false };
+  componentDidUpdate = () => {
+    if (this.state.shown) {
+      window.addEventListener("click", this.closeOptions.bind(this));
+    } else {
+      window.removeEventListener("click", this.closeOptions.bind(this));
+    }
+  };
+  closeOptions() {
+    this.setState({ shown: false });
+  }
+  onOptionClick = (e, id) => {
+    e.stopPropagation();
+    this.setState({ shown: false });
+    this.props.store.setSignupInfo("source", id); 
+  }; 
+  onSelectClick = (e) => { e.stopPropagation();
+     this.setState({ shown: !this.state.shown });
+  }; 
+  findListByCid = (cid, options) => {
+    return options.find((option) => option.id === cid) || {};
+  };
+
+  render() {
+    const { source_list, source } = this.props.store.signupInfo;
+    const { shown } = this.state;
+    const listDropdownOptions = [];
+    const list = toJS(source_list);
+
+    return (
+      <React.Fragment>
+        <span onClick={this.onSelectClick} >
+          <BackgroundContainer bgSrc={Images["select.png"]}>
+            <input
+              className="transpant-input pointer"
+              value={list[source]}
+              disabled
+            ></input>
+          </BackgroundContainer>
+        </span>
+        <div className={`ting-options ${shown ? "" : "hide-option-border"}`}>
+          {shown
+            ? Object.keys(list).map((id) => {
+                return (
+                  <div
+                    onClick={(e) => this.onOptionClick(e, id )}
+                    className="option"
+                    key={id}
+                  >
+                    {list[id]}
                   </div>
                 );
               })

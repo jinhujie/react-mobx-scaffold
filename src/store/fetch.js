@@ -6,9 +6,14 @@ const resolve = path =>{
         return path;
     }
     return isEnvEquieProd 
-    ? 'http://activity-test.tuwan.com'
-    : 'http://activity.tuwan.com'
+    ? ('https://activity-test.tuwan.com' + path)
+    : ('https://activity.tuwan.com' + path)
 };
+
+axios.interceptors.request.use(config => {
+    config.withCredentials = true;
+    return config;
+});
 
 export const fetchSignupInfo = () => {
     return axios.get(resolve('/match/signupinfo?id=29&format=json'));
@@ -16,6 +21,9 @@ export const fetchSignupInfo = () => {
 export const signup =(searchQuery) => {
     return axios.get(
         resolve('/match/signup?id=29'),
-        { params: searchQuery }
+        { params: { ...searchQuery, format: "json" } }
     )
+}
+export const fetchSignedUsers = () => {
+    return axios.get(resolve( '/match/getSignUpUser?id=29&format=json' ))
 }

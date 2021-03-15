@@ -23,7 +23,10 @@ class Root extends React.Component {
           ></img>
           <SignupInfo />
           <img src={Images["matchRule.png"]} className="matchRuleExt" />
-          <img src={Images["extralSummary.png"]} className="extralSummary" />
+          <img src={Images["rewardFinal.png"]} className="matchRuleExt" />
+          <img src={Images["rewardGroup.png"]} className="matchRuleExt" />
+          <img src={Images["rewardChampion.png"]} className="extralSummary" />
+          <img src={Images["extralTips.png"]} className="extralSummary" />
           <div className="raw">
             <span>
               在法律许可范围内，公司有随时调整活动的权利并享有活动的最终解释权，请详细了解规则后再参与

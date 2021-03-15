@@ -13,8 +13,10 @@ const { ABSOLUTE_PUBLIC_PATH } = require("./env");
 
 const argvModeIndex = process.argv.findIndex((v) => v === "--mode");
 const mode =
-  argvModeIndex !== "-1" ? process.argv[argvModeIndex + 1] : undefined;
-const isDevMode = mode === "development";
+  argvModeIndex !== "-1" ? process.argv[argvModeIndex + 2] : undefined;
+const isDevMode = mode === "dev";
+console.log('==============')
+console.log(isDevMode)
 const extractTextPlugin = new ExtractTextPlugin(`css/[name]-one.css`);
 
 //构建分页
@@ -32,10 +34,11 @@ pages.forEach(
 const context = path.resolve(__dirname, "src");
 const config = {
   context,
+  devtool: "source-map",
   entry: { ...entries, common: "./public/index.js" },
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: `js/[name].js`,
+    filename: `js/[name].[hash].js`,
     publicPath: isDevMode ? "" : ABSOLUTE_PUBLIC_PATH,
   },
   module: {
@@ -129,7 +132,8 @@ const config = {
   plugins: (isDevMode
     ? [new webpack.HotModuleReplacementPlugin()]
     : [
-        /*new CleanWebpackPlugin([path.resolve(__dirname, './dist')]),*/ new BundleAnalyzerPlugin(),
+        /*new CleanWebpackPlugin([path.resolve(__dirname, './dist')]),*/ 
+        // new BundleAnalyzerPlugin(),
       ]
   ).concat([
     ...pages.map(
@@ -160,7 +164,8 @@ const config = {
     extractTextPlugin,
   ]),
   optimization: {
-    minimizer: [new UglifyJsPlugin()],
+    // minimizer: [new UglifyJsPlugin()],
+    minimize: false,
     splitChunks: {
       chunks(chunk) {
         return chunk.name !== "common";

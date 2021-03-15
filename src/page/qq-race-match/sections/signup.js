@@ -14,10 +14,14 @@ const classNames = {
 @inject("store")
 @observer
 class SignupInfo extends React.Component {
+  componentDidMount() {
+    this.props.store.fetchSignupInfo();
+    this.child = React.createRef();
+  }
   switchContent(isSignuped) {
     const content = {
       yes: <SignupedList />,
-      no: <SignupForm />,
+      no: <SignupForm open = {this.open} />,
       unknow: null,
     };
     if (isSignuped === undefined) {
@@ -25,13 +29,18 @@ class SignupInfo extends React.Component {
     }
     return isSignuped ? content["yes"] : content["no"];
   }
+  open = () => {
+    this.child.current.open();
+  }
   render() {
-    const { isSignuped, name } = this.props.store.signupInfo;
+    const { is_signup, name } = this.props.store.signupInfo;
+    const store = this.props.store;
+    const { setSignupInfo, default_cid, cid, findListByCid } = this.props.store;
 
     return (
       <section>
         <h1 className={classNames.displayHidden}>比赛报名</h1>
-        <ModalSuccessed />
+        <ModalSuccessed ref={this.child} signupInfo={store.signupInfo} findListByCid={findListByCid} />
 
         <img
           src={Images["sectionSignup.png"]}
@@ -46,7 +55,7 @@ class SignupInfo extends React.Component {
             </React.Fragment>
           ) : null}
         </section>
-        {this.switchContent(isSignuped)}
+        {this.switchContent(is_signup)}
       </section>
     );
   }

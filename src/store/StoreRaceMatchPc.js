@@ -1,35 +1,53 @@
 import { options } from "less";
-import { observable, action, computed } from "mobx";
+import { observable, action, computed, toJS } from "mobx";
+// import { toJS } from "node_modules/mobx/lib/mobx";
 import * as fetches from "./fetch";
 
-const list = [{ cid: "1", title: "a" }];
 class StoreQrmPc {
   @observable signupInfo = {
     //平台昵称
     uid: 0,
     name: "",
     game_name: "",
-    //所属厅
-    list: [...list],
+    //厅
+    list: [],
     //type: number
     qq: undefined,
     //type: number
     mobile: undefined,
     //type: number
+    //默认厅id
+    default_cid: undefined,
+    //厅id
     cid: undefined,
     requiredListTitle: "QQ全服",
-    isSignuped: true,
+    isSignuped: undefined,
+    is_signup: 0,
+    //the way that user from: number(sourceId)
+    source: undefined,
+    source_list: {},
   };
 
   @action signup = () => {
-    const { game_name, mobile, qq, cid } = this.signupInfo;
+    const { game_name, mobile, qq, cid, source } = this.signupInfo;
     const data = {
-      nickName: game_name,
+      nickname: game_name,
       mobile,
       qq,
       cid,
+      source,
     };
-    fetches.signup(data);
+    return fetches.signup(data).then(res => {
+      if (__DEV) {
+        res.data.error = 0;
+      }
+      const { error, error_msg } = res.data;
+      if (error) {
+        window.showTips(error_msg);
+      } else {
+        this.signupInfo.is_signup = 1;
+      }
+    });
   };
   @action setSignupInfo = (fieldName, fieldValue) => {
     if (this.signupInfo[fieldName] !== fieldValue) {
@@ -39,13 +57,28 @@ class StoreQrmPc {
   @action fetchSignupInfo = () => {
     return fetches.fetchSignupInfo().then((res) => {
       if (res.status === 200) {
-        this.signupInfo = res.data.data;
+        if(__DEV) {
+          // res.data.data.is_signup = 1;
+          res.data.data.uid = 1;
+        }
+        const userInfo = res.data.data;
+        this.signupInfo.isSignuped = userInfo.is_signup;
+        this.signupInfo = userInfo;
       }
     });
   };
   @action findListByCid = (cid) => {
-    this.signupInfo.list.find((option) => options.cid === cid);
+    const list = toJS(this.signupInfo.list);
+    console.log(this.signupInfo,cid)
+    return list[cid] || {};
   };
+
+  @observable signupedUser = [];
+  @action fetchSignupedUser = () => {
+    return fetches.fetchSignedUsers().then(res => {
+      this.signupedUser = res.data.data;
+    })
+  }
 }
 
 const storeQrmPc = new StoreQrmPc();

@@ -4,9 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>QQ飞车赛事-点点开黑</title>
   </head>
   <body>
+    <!--#include virtual="/includes/header.shtml"-->
+    <div id="chat-tips" style="position: fixed; opacity: 0; z-index: 100014; background: rgba(0,0,0,0.8); line-height: 42px; width: 300px; left:50%; top:50%; color: #fff; font-size: 14px; border-radius: 6px; text-align: center; transform: translate(-50%, -50%); "></div>
+    <script type="text/javascript">
+      window.showTips = function showTips(text) {
+          var tips = $("#chat-tips");
+          tips.html(text);
+          tips.show();
+          tips.animate({
+              opacity: 1
+          }, 300, function() {
+              setTimeout(function() {
+                  tips.animate({
+                      opacity: 0
+                  }, 300, function() {
+                      tips.hide();
+                  })
+              }, 3000)
+          })
+      }
+    </script>
     <div id="root"></div>
+    <!--#include virtual="/includes/footer.shtml"-->
   </body>
 </html>
