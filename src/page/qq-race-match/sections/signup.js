@@ -19,15 +19,22 @@ class SignupInfo extends React.Component {
     this.child = React.createRef();
   }
   switchContent(isSignuped) {
+    const { stage } = this.props.store.stageInfo;
+    const notSignupDuration = stage !== 1;
+    const signupedListNotLoad = typeof isSignuped === 'undefined';
     const content = {
       yes: <SignupedList />,
       no: <SignupForm open = {this.open} />,
       unknow: null,
     };
-    if (isSignuped === undefined) {
-      return content["unknow"];
+    if (notSignupDuration) {
+      return signupedListNotLoad ? content.unknow : content.yes;
     }
-    return isSignuped ? content["yes"] : content["no"];
+
+    if (signupedListNotLoad) {
+      return content.unknow;
+    }
+    return isSignuped ? content.yes : content.no;
   }
   open = () => {
     this.child.current.open();

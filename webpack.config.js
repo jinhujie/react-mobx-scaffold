@@ -14,8 +14,9 @@ const { ABSOLUTE_PUBLIC_PATH } = require("./env");
 const argvModeIndex = process.argv.findIndex((v) => v === "--mode");
 const mode =
   argvModeIndex !== "-1" ? process.argv[argvModeIndex + 2] : undefined;
-const isDevMode = mode === "dev";
+const isDevMode = mode === "--env.local=dev";
 console.log('==============')
+console.log(argvModeIndex)
 console.log(isDevMode)
 const extractTextPlugin = new ExtractTextPlugin(`css/[name]-one.css`);
 

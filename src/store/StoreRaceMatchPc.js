@@ -27,6 +27,20 @@ class StoreQrmPc {
     source: undefined,
     source_list: {},
   };
+  @observable stageInfo = {
+    //赛事阶段
+    stage: 0,
+    stage_info: [],
+  }
+
+  @action fetchStageInfo = () => {
+    return fetches.fetchStageInfo().then(res => {
+      if (__DEV){
+        res.data.data.stage = 1;
+      }
+      this.stageInfo = res.data.data;
+    });
+  }
 
   @action signup = () => {
     const { game_name, mobile, qq, cid, source } = this.signupInfo;
@@ -62,14 +76,17 @@ class StoreQrmPc {
           res.data.data.uid = 1;
         }
         const userInfo = res.data.data;
-        this.signupInfo.isSignuped = userInfo.is_signup;
+        const { is_signup, default_cid } = userInfo;
+        this.signupInfo.isSignuped = is_signup;
         this.signupInfo = userInfo;
+        if (!is_signup) {
+          this.signupInfo.cid = default_cid;
+        }
       }
     });
   };
   @action findListByCid = (cid) => {
     const list = toJS(this.signupInfo.list);
-    console.log(this.signupInfo,cid)
     return list[cid] || {};
   };
 

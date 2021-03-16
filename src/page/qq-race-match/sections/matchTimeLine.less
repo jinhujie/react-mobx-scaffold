@@ -1,0 +1,52 @@
+.match-tl-container{
+    height: 150px;
+    display: flex;
+    align-items: center;
+}
+.match-time-line{
+    margin: 0 auto;
+    width: 860px;
+    position: relative;
+    .bar{
+        height: 39px;
+        background-repeat: no-repeat;
+        position: relative;
+        padding: 2px;
+        .match-stage{
+            height: 34px;
+            border-radius: 17px 0 0 17px;
+            width: 25%;
+            background-color: red;
+            background: linear-gradient(to right, #24bdfe, #8cf6fd);
+        }
+    }
+    .item{
+        text-align: center;
+        .match-name{
+            font-size: 20px;
+            font-family: "Microsoft YaHei";
+            color: rgb(255, 254, 233);
+            font-weight: bold;
+            text-align: center;
+            -webkit-text-stroke: 1px #5e57d8;
+            margin-bottom: 7px;
+        }
+        .match-name:before{
+            position: absolute;
+            content: attr(data-text);
+            z-index: -1;
+        }
+        position: absolute;
+        top: 50%;
+        transform: translate(-123%, -50%);
+        width: 120px;
+        left: 0;
+        .match-time{
+            font-size: 16px;
+            font-family: "Microsoft YaHei";
+            color: rgb(139, 169, 244);
+            line-height: 2.25;
+            text-align: center;
+        }
+    }
+}

@@ -2,6 +2,7 @@ import React from "react";
 
 import { backgrounded } from "components";
 import SignupInfo from "./sections/signup";
+import MatchTimeLine from './sections/matchTimeLine';
 
 import "./container.less";
 import Images from "imageExporter/qq-race-match";
@@ -17,10 +18,11 @@ class Root extends React.Component {
       <div className="main-bg">
         <h1 className={classNames.displayHidden}>QQ飞车赛事</h1>
         <div className="main">
-          <img
+          <MatchTimeLine />
+          {/* <img
             src={Images["matchTimeline.png"]}
             className="timeline center-block"
-          ></img>
+          ></img> */}
           <SignupInfo />
           <img src={Images["matchRule.png"]} className="matchRuleExt" />
           <img src={Images["rewardFinal.png"]} className="matchRuleExt" />

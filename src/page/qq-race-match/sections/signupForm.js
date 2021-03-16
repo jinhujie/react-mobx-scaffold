@@ -170,13 +170,13 @@ class SignupInfoTing extends React.Component {
     return (
       <React.Fragment>
         <span onClick={this.onSelectClick} >
-          <BackgroundContainer bgSrc={Images["select.png"]}>
+          <div style={{backgroundImage: `url(${Images["select.png"]})`}} className='bgc'>
             <input
               className="transpant-input pointer"
               value={this.findListByCid(cid, listDropdownOptions).title}
               disabled
             ></input>
-          </BackgroundContainer>
+          </div>
         </span>
         <div className={`ting-options ${shown ? "" : "hide-option-border"}`}>
           {shown
@@ -236,6 +236,7 @@ class SignupInfoSource extends React.Component {
           <BackgroundContainer bgSrc={Images["select.png"]}>
             <input
               className="transpant-input pointer"
+              placeholder="请选择"
               value={list[source]}
               disabled
             ></input>
