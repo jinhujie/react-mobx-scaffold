@@ -24,14 +24,14 @@ class SignupedList extends React.Component {
     );
   }
 }
-const UserInfo = ({ name, ting, avatar, uid, is_me }) => (
+const UserInfo = ({ name, title, avatar, uid, is_me }) => (
   <section className="user-info" key={uid}>
     { is_me ? <img src={Images["userSelf.png"]} className="self-icon"/> : null }
     <div className="avatar">
       <img src={avatar} />
     </div>
-    <h1>{name}</h1>
-    <h2>{ting}</h2>
+    <h1 title={name}>{name}</h1>
+    <h2 title={title}>{title}</h2>
   </section>
 );
 

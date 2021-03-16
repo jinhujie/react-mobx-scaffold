@@ -18,7 +18,7 @@ const isDevMode = mode === "--env.local=dev";
 console.log('==============')
 console.log(argvModeIndex)
 console.log(isDevMode)
-const extractTextPlugin = new ExtractTextPlugin(`css/[name]-one.css`);
+const extractTextPlugin = new ExtractTextPlugin(`css/[name]-one.[hash].css`);
 
 //构建分页
 const pages = fs
