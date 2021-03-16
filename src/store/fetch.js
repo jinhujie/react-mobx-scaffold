@@ -3,6 +3,7 @@ const isEnvEquieTest = false;
 
 const resolve = path =>{
     if (__DEV) {
+        // return 'https://activity-test.tuwan.com' + path;
         return path;
     }
     return isEnvEquieTest 

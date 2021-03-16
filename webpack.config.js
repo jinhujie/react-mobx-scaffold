@@ -210,6 +210,12 @@ module.exports = (env, argv) => {
     config.devServer = {
       port: "9010",
       hot: true,
+      host: "0.0.0.0",
+      // public:
+      //   'avtivity-test.tuwan.com'
+      // ,
+      disableHostCheck: true,
+
       proxy: [
         {
           context: ["/match"],
@@ -219,6 +225,11 @@ module.exports = (env, argv) => {
           changeOrigin: true,
           secure: false,
           logLevel: "debug",
+          withCredentials: true,
+          // headers: { Cookie: 'myToken=jx42NAQSFRwXJjyQLoax_sw7h1SdYGXog-gZL9bjFU7' },
+          // headers: {
+          //   'origin': 'y-test.tuwan.com'
+          // }
         },
       ],
     };
