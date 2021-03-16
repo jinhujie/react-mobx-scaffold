@@ -14,6 +14,7 @@ const { ABSOLUTE_PUBLIC_PATH } = require("./env");
 const argvModeIndex = process.argv.findIndex((v) => v === "--mode");
 const mode =
   argvModeIndex !== "-1" ? process.argv[argvModeIndex + 2] : undefined;
+//local dev environment
 const isDevMode = mode === "--env.local=dev";
 console.log('==============')
 console.log(argvModeIndex)
@@ -35,7 +36,8 @@ pages.forEach(
 const context = path.resolve(__dirname, "src");
 const config = {
   context,
-  devtool: "source-map",
+  // TODO: evn.prod
+  // devtool: "source-map",
   entry: { ...entries, common: "./public/index.js" },
   output: {
     path: path.resolve(__dirname, "dist"),
@@ -143,7 +145,7 @@ const config = {
           filename:
             (isDevMode ? "" : "page/") +
             changeFirststr2Lowercase(name) +
-            ".html",
+            ".htm",
           template: path.resolve(__dirname, "./src/public/index.html"),
           // chunksSortMode: "manual",
           // chunks: [
@@ -163,10 +165,16 @@ const config = {
       chunkFilename: "[id].css",
     }),
     extractTextPlugin,
+    new webpack.HashedModuleIdsPlugin({
+      hashFunction: 'sha256',
+      hashDigest: 'hex',
+      hashDigestLength: 20
+    }),
   ]),
   optimization: {
     // minimizer: [new UglifyJsPlugin()],
-    minimize: false,
+    //is Env.prod?
+    minimize: true,
     splitChunks: {
       chunks(chunk) {
         return chunk.name !== "common";

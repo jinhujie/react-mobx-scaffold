@@ -1,11 +1,11 @@
 import axios from 'axios';
-const isEnvEquieProd = true;
+const isEnvEquieTest = false;
 
 const resolve = path =>{
     if (__DEV) {
         return path;
     }
-    return isEnvEquieProd 
+    return isEnvEquieTest 
     ? ('https://activity-test.tuwan.com' + path)
     : ('https://activity.tuwan.com' + path)
 };
