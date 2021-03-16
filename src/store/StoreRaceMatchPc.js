@@ -36,7 +36,7 @@ class StoreQrmPc {
   @action fetchStageInfo = () => {
     return fetches.fetchStageInfo().then(res => {
       if (__DEV){
-        res.data.data.stage = 2
+        res.data.data.stage = 1
       }
       this.stageInfo = res.data.data;
     });
@@ -72,19 +72,27 @@ class StoreQrmPc {
     return fetches.fetchSignupInfo().then((res) => {
       if (res.status === 200) {
         if(__DEV) {
-          // res.data.data.is_signup = 1;
+          res.data.data.is_signup = 0;
           res.data.data.uid = 1;
         }
         const userInfo = res.data.data;
         const { is_signup, default_cid } = userInfo;
         this.signupInfo.isSignuped = is_signup;
-        this.signupInfo = userInfo;
+        Object.keys(userInfo).forEach(propName => {
+          this.signupInfo[propName] = userInfo[propName]
+        })
         if (!is_signup) {
           this.signupInfo.cid = default_cid;
         }
       }
     });
   };
+  @action setDefaultCid = () => {
+    const default_cid = this.signupInfo.default_cid;
+    if (default_cid && typeof cid === 'undefined') {
+      this.signupInfo.cid = default_cid;
+    }
+  }
   @action findListByCid = (cid) => {
     const list = toJS(this.signupInfo.list);
     return list[cid] || {};

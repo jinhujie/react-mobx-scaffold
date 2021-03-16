@@ -22,7 +22,7 @@ class MatchTimeLine extends React.Component{
             borderRadius: `${stage === stage_info.length ? '17px' : ''}`}}
           />
         </div>
-        { stage_info.map(( info, i ) => <Item info={info} index={i} activeIndex={stage}/>)}
+        { stage_info.map(( info, i ) => <Item info={info} key={i} index={i} activeIndex={stage}/>)}
       </div>
 
       </div>

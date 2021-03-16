@@ -19,12 +19,12 @@ class SignupInfo extends React.Component {
     this.child = React.createRef();
   }
   switchContent(isSignuped) {
-    const { stage } = this.props.store.stageInfo;
+    const { stage, cid } = this.props.store.stageInfo;
     const notSignupDuration = stage !== 1;
     const signupedListNotLoad = typeof isSignuped === 'undefined';
     const content = {
       yes: <SignupedList />,
-      no: <SignupForm open = {this.open} />,
+      no: <SignupForm cid={cid} open = {this.open} />,
       unknow: null,
     };
     if (notSignupDuration) {
@@ -47,7 +47,7 @@ class SignupInfo extends React.Component {
     return (
       <section>
         <h1 className={classNames.displayHidden}>比赛报名</h1>
-        <ModalSuccessed ref={this.child} signupInfo={store.signupInfo} findListByCid={findListByCid} />
+        <ModalSuccessed ref={this.child} store={this.props.store} signupInfo={store.signupInfo} findListByCid={findListByCid} />
 
         <img
           src={Images["sectionSignup.png"]}

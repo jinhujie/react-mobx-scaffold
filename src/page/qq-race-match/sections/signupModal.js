@@ -7,6 +7,29 @@ export class ModalSuccessed extends Modal {
   constructor() {
     super();
   }
+  onSubmit = () => {
+    const { uid } = this.props.store.signupInfo;
+    const isLogined = uid > 0;
+    if (__DEV) {
+      return this.props.store.signup().then(() => {
+        this.close();
+        if (this.props.store.signupInfo.is_signup) {
+          // this.open();
+        }
+      })
+
+    }
+    if (isLogined) {
+      this.props.store.signup().then(() => {
+        this.close();
+        if (this.props.store.signupInfo.is_signup) {
+          // this.open();
+        }
+      })
+    } else {
+      window.showLogin();
+    }
+  };
   render = () => {
     const { name, cid } = this.props.signupInfo;
     const { findListByCid } = this.props;
@@ -20,11 +43,11 @@ export class ModalSuccessed extends Modal {
           <label>所属厅:</label>
           <span>{ findListByCid(cid).title || null }</span>
         </li>
-        <li className="last">比赛时间：3月19日19:00-20:00请按时参加比赛</li>
+        <li className="last">比赛时间：3月19日-21日</li>
         <li className="submit">
           <img
             src={Images["signupSubmit.png"]}
-            onClick={this.close.bind(this)}
+            onClick={this.onSubmit.bind(this)}
           />
         </li>
         <li className="modal-signup-footer">一经确认不得修改报名信息</li>

@@ -81,11 +81,12 @@
 }
 
 .signed-list{
+  box-sizing: border-box;
+  height: 451px;
   margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
   padding: 13px;
-  height: 430px;
   overflow-y: scroll;
   background-size: 100% 100%;
 
@@ -119,7 +120,15 @@
         transform: translate(-50%, -50%);
       }
     }
+    h1,h2{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
     h1{
+      min-height: 18px;
+      font-size: 18px;
+      color: #ffffff;
       margin-top: 13px;
       margin-bottom: 10px;
     }

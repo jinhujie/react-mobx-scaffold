@@ -123,7 +123,7 @@ const config = {
               limit: 8192,
               fallback: isDevMode
                 ? "file-loader"
-                : "file-loader?name=img/[name].[ext]",
+                : "file-loader?name=img/[name][hash].[ext]",
             },
           },
         ],

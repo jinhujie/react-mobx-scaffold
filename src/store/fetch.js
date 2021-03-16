@@ -28,5 +28,5 @@ export const fetchSignedUsers = () => {
     return axios.get(resolve( '/match/getSignUpUser?id=29&format=json' ))
 }
 export const fetchStageInfo = () => {
-    return axios.get(resolve('match/stageinfo?id=29&format=json'))
+    return axios.get(resolve('/match/stageinfo?id=29&format=json'))
 }

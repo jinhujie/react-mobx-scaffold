@@ -119,7 +119,7 @@ class SignupForm extends React.Component {
 
         <div className="submit-container">
           <img
-            onClick={this.onSubmit}
+            onClick={this.props.open.bind(this)}
             src={Images["signupSubmit.png"]}
             className="submit"
           />
@@ -155,6 +155,9 @@ class SignupInfoTing extends React.Component {
   findListByCid = (cid, options) => {
     return options.find((option) => option.id === cid) || {};
   };
+  // componentDidUpdate = () => {
+  //   this.props.store.setDefaultCid();
+  // }
 
   render() {
     const { list, cid } = this.props.store.signupInfo;
@@ -166,9 +169,11 @@ class SignupInfoTing extends React.Component {
         listDropdownOptions.push(obj);
       });
     }
+    console.log(cid, this.props.store.signupInfo)
 
     return (
       <React.Fragment>
+        <div style={{display: 'none'}}>{cid}</div>
         <span onClick={this.onSelectClick} >
           <div style={{backgroundImage: `url(${Images["select.png"]})`}} className='bgc'>
             <input
