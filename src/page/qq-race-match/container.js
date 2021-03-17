@@ -2,7 +2,8 @@ import React from "react";
 
 import { backgrounded } from "components";
 import SignupInfo from "./sections/signup";
-import MatchTimeLine from './sections/matchTimeLine';
+import MatchAmbientStatus from "./sections/MatchAmbientStatus";
+import MatchTimeLine from "./sections/matchTimeLine";
 
 import "./container.less";
 import Images from "imageExporter/qq-race-match";
@@ -24,6 +25,7 @@ class Root extends React.Component {
             className="timeline center-block"
           ></img> */}
           <SignupInfo />
+          <MatchAmbientStatus />
           <img src={Images["matchRule.png"]} className="matchRuleExt" />
           <img src={Images["rewardFinal.png"]} className="matchRuleExt" />
           <img src={Images["rewardGroup.png"]} className="matchRuleExt" />

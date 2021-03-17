@@ -31,16 +31,16 @@ class StoreQrmPc {
     //赛事阶段
     stage: 0,
     stage_info: [],
-  }
+  };
 
   @action fetchStageInfo = () => {
-    return fetches.fetchStageInfo().then(res => {
-      if (__DEV){
-        res.data.data.stage = 1
+    return fetches.fetchStageInfo().then((res) => {
+      if (__DEV) {
+        res.data.data.stage = 1;
       }
       this.stageInfo = res.data.data;
     });
-  }
+  };
 
   @action signup = () => {
     const { game_name, mobile, qq, cid, source } = this.signupInfo;
@@ -51,7 +51,7 @@ class StoreQrmPc {
       cid,
       source,
     };
-    return fetches.signup(data).then(res => {
+    return fetches.signup(data).then((res) => {
       if (__DEV) {
         res.data.error = 0;
       }
@@ -71,16 +71,16 @@ class StoreQrmPc {
   @action fetchSignupInfo = () => {
     return fetches.fetchSignupInfo().then((res) => {
       if (res.status === 200) {
-        if(__DEV) {
+        if (__DEV) {
           res.data.data.is_signup = 0;
           res.data.data.uid = 1;
         }
         const userInfo = res.data.data;
         const { is_signup, default_cid } = userInfo;
         this.signupInfo.isSignuped = is_signup;
-        Object.keys(userInfo).forEach(propName => {
-          this.signupInfo[propName] = userInfo[propName]
-        })
+        Object.keys(userInfo).forEach((propName) => {
+          this.signupInfo[propName] = userInfo[propName];
+        });
         if (!is_signup) {
           this.signupInfo.cid = default_cid;
         }
@@ -89,10 +89,10 @@ class StoreQrmPc {
   };
   @action setDefaultCid = () => {
     const default_cid = this.signupInfo.default_cid;
-    if (default_cid && typeof cid === 'undefined') {
+    if (default_cid && typeof cid === "undefined") {
       this.signupInfo.cid = default_cid;
     }
-  }
+  };
   @action findListByCid = (cid) => {
     const list = toJS(this.signupInfo.list);
     return list[cid] || {};
@@ -100,10 +100,19 @@ class StoreQrmPc {
 
   @observable signupedUser = [];
   @action fetchSignupedUser = () => {
-    return fetches.fetchSignedUsers().then(res => {
+    return fetches.fetchSignedUsers().then((res) => {
       this.signupedUser = res.data.data;
-    })
-  }
+    });
+  };
+
+  @observable matchAmbient = {
+    group_team: [],
+  };
+  @action fetchMatchAmbientStatus = () => {
+    return fetches.fetchMatchAmbientStatus().then((res) => {
+      this.matchAmbient = res.data.data;
+    });
+  };
 }
 
 const storeQrmPc = new StoreQrmPc();

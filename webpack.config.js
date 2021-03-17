@@ -16,10 +16,12 @@ const mode =
   argvModeIndex !== "-1" ? process.argv[argvModeIndex + 2] : undefined;
 //local dev environment
 const isDevMode = mode === "--env.local=dev";
-console.log('==============')
-console.log(argvModeIndex)
-console.log(isDevMode)
-const extractTextPlugin = new ExtractTextPlugin(`css/[name]-one.[hash].css`);
+console.log("==============");
+console.log(argvModeIndex);
+console.log(isDevMode);
+const extractTextPlugin = new ExtractTextPlugin(
+  isDevMode ? `css/[name].css` : `css/[name]-one.[hash].css`
+);
 
 //构建分页
 const pages = fs
@@ -41,7 +43,7 @@ const config = {
   entry: { ...entries, common: "./public/index.js" },
   output: {
     path: path.resolve(__dirname, "dist"),
-    filename: `js/[name].[hash].js`,
+    filename: isDevMode ? "js/[name].js" : `js/[name].[hash].js`,
     publicPath: isDevMode ? "" : ABSOLUTE_PUBLIC_PATH,
   },
   module: {
@@ -82,10 +84,10 @@ const config = {
               {
                 loader: "css-loader",
                 options: {
-                  minimize: !isDevMode,
+                  // minimize: !isDevMode,
                   sourceMap: isDevMode,
                   // modules: true,
-                  localIdentName: "[name]__[local]___[hash:base64:5]",
+                  // localIdentName: "[name]__[local]___[hash:base64:5]",
                 },
               },
               "postcss-loader",
@@ -103,7 +105,7 @@ const config = {
                     minimize: !isDevMode,
                     sourceMap: isDevMode,
                     // modules: true,
-                    localIdentName: "[name]__[local]___[hash:base64:5]",
+                    // localIdentName: "[name]__[local]___[hash:base64:5]",
                   },
                 },
                 {
@@ -135,7 +137,12 @@ const config = {
   plugins: (isDevMode
     ? [new webpack.HotModuleReplacementPlugin()]
     : [
-        /*new CleanWebpackPlugin([path.resolve(__dirname, './dist')]),*/ 
+        new webpack.HashedModuleIdsPlugin({
+          hashFunction: "sha256",
+          hashDigest: "hex",
+          hashDigestLength: 20,
+        }),
+        /*new CleanWebpackPlugin([path.resolve(__dirname, './dist')]),*/
         // new BundleAnalyzerPlugin(),
       ]
   ).concat([
@@ -165,11 +172,6 @@ const config = {
       chunkFilename: "[id].css",
     }),
     extractTextPlugin,
-    new webpack.HashedModuleIdsPlugin({
-      hashFunction: 'sha256',
-      hashDigest: 'hex',
-      hashDigestLength: 20
-    }),
   ]),
   optimization: {
     // minimizer: [new UglifyJsPlugin()],
@@ -206,18 +208,17 @@ const config = {
 
 module.exports = (env, argv) => {
   if (argv.mode === "development") {
-    config.devtool = "inline-source-map";
+    // config.devtool = "inline-source-map";
+    config.devtool = "eval-cheap-module-source-map";
     config.devServer = {
       port: "9010",
       hot: true,
       host: "0.0.0.0",
-      // public:
-      //   'avtivity-test.tuwan.com'
-      // ,
       disableHostCheck: true,
 
       proxy: [
         {
+          compress: true,
           context: ["/match"],
           target: isDevMode
             ? "http://activity-test.tuwan.com"
@@ -226,10 +227,6 @@ module.exports = (env, argv) => {
           secure: false,
           logLevel: "debug",
           withCredentials: true,
-          // headers: { Cookie: 'myToken=jx42NAQSFRwXJjyQLoax_sw7h1SdYGXog-gZL9bjFU7' },
-          // headers: {
-          //   'origin': 'y-test.tuwan.com'
-          // }
         },
       ],
     };
