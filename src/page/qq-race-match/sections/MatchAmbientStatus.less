@@ -10,6 +10,7 @@
     margin-bottom: 33px;
 }
 .mas-teams-con{
+  width: 1226px;
   margin-top: 33px;
   height: 1134px;
   overflow: hidden;
@@ -20,10 +21,17 @@
   display: flex;
   margin-bottom: 20px;
   .mas-index{
+    text-orientation: upright;
+    writing-mode: vertical-lr;
+    text-align: center;
+    line-height: 90px;
     width: 90px;
+    color: #5666b7;
+    font-size: 42px;
+    font-weight: bold;
   }
   .mas-player{
-    width: 174px;
+    width: 150px;
     padding: 25px 11px;
     height: 267px;
     display: flex;
@@ -33,14 +41,30 @@
     font-size: 18px;
     color: #98aace;
     text-align: center;
+    position: relative;
+    .mas-avatar{
+      min-width: 107px;
+      min-height: 107px;
+      margin-bottom: 16px;
+    }
     .mas-psta{
       line-height: 20px;
       .tt-text-overflow();
       width: 110px;
+      height: 20px;
+      min-height: 20px;
+      line-height: 18px;
+    }
+    .mas-cardbr{
+      display: inline-block;
+      margin: 7px auto;
     }
     .mas-score{
       .tt-text-overflow;
-      width: 126px;
+      padding: 0 8px;
+      width: 132px;
+      height: 32px;
+      min-height: 32px;
       line-height: 32px;
       border-radius: 5px;
       background-color: #424f9b;
@@ -48,10 +72,19 @@
     }
     .score{
       color: #ffffff;
+      width: 185px;
     }
   }
   .mas-upper{
-
+    .upper-icon{
+      position: absolute;
+      top: 13px;
+      left: 13px;
+    }
+  }
+  .mas-win-cli{
+    display: inline-block;
+    padding: 2px 0;
   }
 }
 .mas-teams-con::-webkit-scrollbar {
