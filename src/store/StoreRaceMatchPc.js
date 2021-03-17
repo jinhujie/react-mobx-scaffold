@@ -36,7 +36,7 @@ class StoreQrmPc {
   @action fetchStageInfo = () => {
     return fetches.fetchStageInfo().then((res) => {
       if (__DEV) {
-        res.data.data.stage = 1;
+        res.data.data.stage = 2;
       }
       this.stageInfo = res.data.data;
     });

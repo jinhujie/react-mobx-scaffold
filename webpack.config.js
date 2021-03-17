@@ -16,9 +16,11 @@ const mode =
   argvModeIndex !== "-1" ? process.argv[argvModeIndex + 2] : undefined;
 //local dev environment
 const isDevMode = mode === "--env.local=dev";
+const isBuildDev = mode === "--env.build=dev";
+const isBuildProd = mode === "--env.build=prod";
 console.log("==============");
-console.log(argvModeIndex);
-console.log(isDevMode);
+console.log(`loclal devServer: ${isDevMode}`);
+console.log(`build in ${isBuildDev ? "dev" : "prod"}`);
 const extractTextPlugin = new ExtractTextPlugin(
   isDevMode ? `css/[name].css` : `css/[name]-one.[hash].css`
 );
@@ -166,6 +168,8 @@ const config = {
     // new myPlugin(),
     new webpack.DefinePlugin({
       __DEV: JSON.stringify(isDevMode),
+      __BUILD__DEV: JSON.stringify(isBuildDev),
+      __BUILD__PROD: JSON.stringify(isBuildProd),
     }),
     new MiniCssExtractPlugin({
       filename: `css/[name].css`,
@@ -174,9 +178,7 @@ const config = {
     extractTextPlugin,
   ]),
   optimization: {
-    // minimizer: [new UglifyJsPlugin()],
-    //is Env.prod?
-    minimize: true,
+    minimizer: isBuildProd ? [new UglifyJsPlugin()] : [],
     splitChunks: {
       chunks(chunk) {
         return chunk.name !== "common";

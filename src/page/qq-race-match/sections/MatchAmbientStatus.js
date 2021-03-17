@@ -17,11 +17,6 @@ class MatchAmbientStatus extends Component {
   }
 
   render() {
-    let i = 0;
-    while (i < 100) {
-      console.log(indexToCn(i));
-      i++;
-    }
     const { group_team } = this.props.store.matchAmbient;
     const teams = toJS(group_team);
     return (
