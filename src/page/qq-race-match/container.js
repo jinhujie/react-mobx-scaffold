@@ -16,38 +16,57 @@ const classNames = {
 @inject("store")
 @observer
 class Root extends React.Component {
-  filterByStage = (stage, reactDetailNode) => {
-    if (!stage) return null;
+  switchContentByStage = (stage) => {
+    const rewardGroup = (
+      <img src={Images["rewardGroup.png"]} className="matchRuleExt" />
+    );
+    const rewardFinal = (
+      <img src={Images["rewardFinal.png"]} className="matchRuleExt" />
+    );
+    const rewardChampion = (
+      <img src={Images["rewardChampion.png"]} className="extralSummary" />
+    );
+
+    const matchRule = (
+      <img src={Images["matchRule.png"]} className="matchRuleExt" />
+    );
+    const extralTips = (
+      <img src={Images["extralTips.png"]} className="extralSummary" />
+    );
+
+    switch (stage) {
+      case 0:
+        return null;
+      case 1:
+      case 2:
+        return [
+          <SignupInfo />,
+          matchRule,
+          rewardFinal,
+          rewardGroup,
+          rewardChampion,
+          extralTips,
+        ];
+      case 3:
+        return [
+          <MatchAmbientStatus />,
+          rewardGroup,
+          rewardFinal,
+          rewardChampion,
+        ];
+      case 4:
+        return [rewardFinal, rewardChampion];
+    }
   };
   render() {
     const { stage } = this.props.store.stageInfo;
-    const isStage1 = stage && stage === 1;
     return backgrounded(
       Images["bg1.jpg"],
       <div className="main-bg">
         <h1 className={classNames.displayHidden}>QQ飞车赛事</h1>
         <div className="main">
           <MatchTimeLine />
-          {/* <img
-            src={Images["matchTimeline.png"]}
-            className="timeline center-block"
-          ></img> */}
-          {isStage1 && <SignupInfo />}
-          <MatchAmbientStatus />
-          {isStage1 && (
-            <img src={Images["matchRule.png"]} className="matchRuleExt" />
-          )}
-          {stage && stage === 2 && (
-            <img src={Images["rewardGroup.png"]} className="matchRuleExt" />
-          )}
-          <img src={Images["rewardFinal.png"]} className="matchRuleExt" />
-          {isStage1 && (
-            <img src={Images["rewardGroup.png"]} className="matchRuleExt" />
-          )}
-          <img src={Images["rewardChampion.png"]} className="extralSummary" />
-          {isStage1 && (
-            <img src={Images["extralTips.png"]} className="extralSummary" />
-          )}
+          {this.switchContentByStage(stage)}
           <div className="raw">
             <span>
               在法律许可范围内，公司有随时调整活动的权利并享有活动的最终解释权，请详细了解规则后再参与
